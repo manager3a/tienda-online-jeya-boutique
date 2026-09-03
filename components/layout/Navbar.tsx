@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useCart } from '@/lib/cart/store';
@@ -24,9 +25,15 @@ export default function Navbar() {
     <>
       <header className="sticky top-0 z-40 border-b border-black/10 bg-bg/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4">
-          <Link href="/" className="flex flex-col leading-none" onClick={() => setMenuOpen(false)}>
-            <span className="font-heading text-3xl font-bold text-dark">jeya</span>
-            <span className="text-[0.62rem] tracking-[0.28em] text-accent-dark">BOUTIQUE</span>
+          <Link href="/" className="flex items-center" onClick={() => setMenuOpen(false)}>
+            <Image
+              src="/images/logo-jeya.jpg"
+              alt="Jeya Boutique"
+              width={48}
+              height={48}
+              priority
+              className="h-11 w-11 rounded-full object-cover"
+            />
           </Link>
 
           <nav aria-label="Menú principal" className="hidden lg:flex lg:items-center lg:gap-7">

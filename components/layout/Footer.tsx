@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default function Footer() {
@@ -5,9 +6,14 @@ export default function Footer() {
     <footer className="bg-dark text-[#d9dbda]">
       <div className="mx-auto grid max-w-7xl gap-10 px-5 py-16 md:grid-cols-[1.3fr_1fr_1fr_1fr]">
         <div>
-          <Link href="/" className="flex flex-col leading-none">
-            <span className="font-heading text-2xl font-bold text-white">jeya</span>
-            <span className="text-[0.6rem] tracking-[0.28em] text-accent-dark">BOUTIQUE</span>
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/images/logo-jeya.jpg"
+              alt="Jeya Boutique"
+              width={44}
+              height={44}
+              className="h-10 w-10 rounded-full object-cover"
+            />
           </Link>
           <p className="mt-4 max-w-[32ch] text-sm text-[#9ea3a1]">
             Moda y diseño con exclusividad, atención personalizada y asesoramiento.
