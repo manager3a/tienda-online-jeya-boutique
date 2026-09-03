@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-cormorant), serif;
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-sm border border-transparent bg-dark px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-dark active:scale-[0.98];
+  }
+  .btn-outline {
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-sm border border-dark bg-transparent px-6 py-3 text-sm font-semibold text-dark transition-colors hover:bg-dark hover:text-white active:scale-[0.98];
+  }
+  .btn-ghost {
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-sm border border-black/15 bg-transparent px-6 py-3 text-sm font-semibold text-dark transition-colors hover:border-dark active:scale-[0.98];
+  }
+  .eyebrow {
+    @apply mb-2 text-[0.78rem] font-semibold uppercase tracking-[0.14em] text-accent-dark;
+  }
+  .input-field {
+    @apply min-h-[44px] w-full rounded-sm border border-black/15 bg-white px-4 text-sm outline-none focus:border-dark;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
