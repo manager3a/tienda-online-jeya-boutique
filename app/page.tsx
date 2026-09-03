@@ -48,12 +48,12 @@ export default function HomePage() {
           <div className="relative">
             <div className="relative aspect-[4/5] overflow-hidden rounded-lg shadow-card">
               <Image
-                src="https://placehold.co/640x760/151716/38c2bc?text=Jeya+Boutique"
+                src="/images/hero-mujeres.jpg"
                 alt="Colección Jeya Boutique"
                 fill
                 priority
                 sizes="(min-width: 1024px) 40vw, 90vw"
-                className="object-cover"
+                className="kenburns-top object-cover object-center"
               />
             </div>
             <div className="absolute -bottom-4 -left-4 flex flex-col gap-1 rounded-md bg-dark px-5 py-4 text-white">
