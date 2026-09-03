@@ -15,52 +15,45 @@ export default function HomePage() {
 
   return (
     <>
-      <section className="py-12 lg:py-24">
-        <div className="mx-auto grid max-w-7xl gap-10 px-5 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
-          <div>
-            <p className="eyebrow">Nueva colección · Moda y diseño</p>
-            <h1 className="mb-4 text-[clamp(2.2rem,5vw,3.6rem)] font-semibold leading-[1.1] text-dark">
-              Exclusividad que se nota en cada detalle
-            </h1>
-            <p className="mb-6 max-w-[46ch] text-[1.05rem] text-neutral-600">
-              Blusas, chaquetas, zapatos, faldas y bolsos seleccionados para la mujer que
-              busca piezas con carácter y asesoría personalizada, no solo ropa de closet.
-            </p>
-            <div className="mb-6 flex flex-wrap gap-3">
-              <Link href="/productos" className="btn-primary">
-                Ver productos
-              </Link>
-              <a
-                href="https://wa.me/573015794089"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-ghost"
-              >
-                Asesoría por WhatsApp
-              </a>
-            </div>
-            <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-neutral-500">
-              <li>— Atención personalizada</li>
-              <li>— Piezas exclusivas</li>
-              <li>— Envíos desde Bogotá</li>
-            </ul>
+      <section className="relative flex min-h-[560px] items-center overflow-hidden lg:min-h-[680px]">
+        <Image
+          src="/images/hero-mujeres.jpg"
+          alt="Colección Jeya Boutique"
+          fill
+          priority
+          sizes="100vw"
+          className="kenburns-top object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-dark/60 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-dark/70 via-dark/30 to-dark/50" />
+
+        <div className="relative mx-auto max-w-3xl px-5 text-center text-white">
+          <p className="eyebrow !text-accent">Nueva colección · Moda y diseño</p>
+          <h1 className="mb-4 text-[clamp(2.2rem,5vw,3.6rem)] font-semibold leading-[1.1]">
+            Exclusividad que se nota en cada detalle
+          </h1>
+          <p className="mx-auto mb-6 max-w-[46ch] text-[1.05rem] text-white/85">
+            Blusas, chaquetas, zapatos, faldas y bolsos seleccionados para la mujer que
+            busca piezas con carácter y asesoría personalizada, no solo ropa de closet.
+          </p>
+          <div className="mb-6 flex flex-wrap justify-center gap-3">
+            <Link href="/productos" className="btn-primary bg-accent text-dark hover:bg-white">
+              Ver productos
+            </Link>
+            <a
+              href="https://wa.me/573015794089"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-ghost border-white/40 text-white hover:border-white"
+            >
+              Asesoría por WhatsApp
+            </a>
           </div>
-          <div className="relative">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-lg shadow-card">
-              <Image
-                src="/images/hero-mujeres.jpg"
-                alt="Colección Jeya Boutique"
-                fill
-                priority
-                sizes="(min-width: 1024px) 40vw, 90vw"
-                className="kenburns-top object-cover object-center"
-              />
-            </div>
-            <div className="absolute -bottom-4 -left-4 flex flex-col gap-1 rounded-md bg-dark px-5 py-4 text-white">
-              <span className="text-xs">Colección</span>
-              <strong className="font-heading text-lg text-accent">Nueva temporada</strong>
-            </div>
-          </div>
+          <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-white/70">
+            <li>— Atención personalizada</li>
+            <li>— Piezas exclusivas</li>
+            <li>— Envíos desde Bogotá</li>
+          </ul>
         </div>
       </section>
 
