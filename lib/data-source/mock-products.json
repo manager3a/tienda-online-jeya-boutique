@@ -6,16 +6,35 @@
     "categoria": "blusas",
     "precio": 149000,
     "descripcion": "Blusa de manga larga en tejido fluido, corte relajado y cuello redondo. Ideal para looks de oficina o salidas informales con un toque de elegancia.",
-    "imagen": "https://placehold.co/480x600/f4f3f0/151716?text=Blusa+Aurora",
+    "imagen": "/images/blusas-generico.jpg",
     "imagenes": [
-      "https://placehold.co/800x1000/f4f3f0/151716?text=Blusa+Aurora+1",
-      "https://placehold.co/800x1000/151716/38c2bc?text=Blusa+Aurora+2"
+      "/images/blusas-generico.jpg"
     ],
     "variantes": [
-      { "talla": "S", "color": "Neutro", "colorHex": "#e8e5df", "stock": 6 },
-      { "talla": "M", "color": "Neutro", "colorHex": "#e8e5df", "stock": 8 },
-      { "talla": "L", "color": "Neutro", "colorHex": "#e8e5df", "stock": 4 },
-      { "talla": "M", "color": "Negro", "colorHex": "#151716", "stock": 5 }
+      {
+        "talla": "S",
+        "color": "Neutro",
+        "colorHex": "#e8e5df",
+        "stock": 6
+      },
+      {
+        "talla": "M",
+        "color": "Neutro",
+        "colorHex": "#e8e5df",
+        "stock": 8
+      },
+      {
+        "talla": "L",
+        "color": "Neutro",
+        "colorHex": "#e8e5df",
+        "stock": 4
+      },
+      {
+        "talla": "M",
+        "color": "Negro",
+        "colorHex": "#151716",
+        "stock": 5
+      }
     ],
     "badge": "Nuevo"
   },
@@ -26,15 +45,29 @@
     "categoria": "blusas",
     "precio": 169000,
     "descripcion": "Blusa en mezcla de seda con caída suave y botones nacarados. Pieza versátil para looks de día a noche.",
-    "imagen": "https://placehold.co/480x600/f4f3f0/151716?text=Blusa+Seda+Alma",
+    "imagen": "/images/blusas-generico.jpg",
     "imagenes": [
-      "https://placehold.co/800x1000/f4f3f0/151716?text=Blusa+Seda+Alma+1",
-      "https://placehold.co/800x1000/38c2bc/151716?text=Blusa+Seda+Alma+2"
+      "/images/blusas-generico.jpg"
     ],
     "variantes": [
-      { "talla": "S", "color": "Verde cian", "colorHex": "#38c2bc", "stock": 3 },
-      { "talla": "M", "color": "Verde cian", "colorHex": "#38c2bc", "stock": 5 },
-      { "talla": "L", "color": "Blanco", "colorHex": "#ffffff", "stock": 2 }
+      {
+        "talla": "S",
+        "color": "Verde cian",
+        "colorHex": "#38c2bc",
+        "stock": 3
+      },
+      {
+        "talla": "M",
+        "color": "Verde cian",
+        "colorHex": "#38c2bc",
+        "stock": 5
+      },
+      {
+        "talla": "L",
+        "color": "Blanco",
+        "colorHex": "#ffffff",
+        "stock": 2
+      }
     ]
   },
   {
@@ -44,12 +77,29 @@
     "categoria": "blusas",
     "precio": 139000,
     "descripcion": "Blusa de lino transpirable con manga corta y detalle de pliegues frontales.",
-    "imagen": "https://placehold.co/480x600/f4f3f0/151716?text=Blusa+Lino",
-    "imagenes": ["https://placehold.co/800x1000/f4f3f0/151716?text=Blusa+Lino+1"],
+    "imagen": "/images/blusas-generico.jpg",
+    "imagenes": [
+      "/images/blusas-generico.jpg"
+    ],
     "variantes": [
-      { "talla": "S", "color": "Beige", "colorHex": "#d8cdb8", "stock": 7 },
-      { "talla": "M", "color": "Beige", "colorHex": "#d8cdb8", "stock": 6 },
-      { "talla": "L", "color": "Negro", "colorHex": "#151716", "stock": 4 }
+      {
+        "talla": "S",
+        "color": "Beige",
+        "colorHex": "#d8cdb8",
+        "stock": 7
+      },
+      {
+        "talla": "M",
+        "color": "Beige",
+        "colorHex": "#d8cdb8",
+        "stock": 6
+      },
+      {
+        "talla": "L",
+        "color": "Negro",
+        "colorHex": "#151716",
+        "stock": 4
+      }
     ]
   },
   {
@@ -60,15 +110,29 @@
     "precio": 329000,
     "precioOriginal": 379000,
     "descripcion": "Chaqueta oversize en paño estructurado, hombros marcados y forro interior. Pieza statement de la colección.",
-    "imagen": "https://placehold.co/480x600/151716/38c2bc?text=Chaqueta+Noir",
+    "imagen": "/images/chaquetas-generico.jpg",
     "imagenes": [
-      "https://placehold.co/800x1000/151716/38c2bc?text=Chaqueta+Noir+1",
-      "https://placehold.co/800x1000/232625/ffffff?text=Chaqueta+Noir+2"
+      "/images/chaquetas-generico.jpg"
     ],
     "variantes": [
-      { "talla": "S", "color": "Negro", "colorHex": "#151716", "stock": 2 },
-      { "talla": "M", "color": "Negro", "colorHex": "#151716", "stock": 3 },
-      { "talla": "L", "color": "Negro", "colorHex": "#151716", "stock": 1 }
+      {
+        "talla": "S",
+        "color": "Negro",
+        "colorHex": "#151716",
+        "stock": 2
+      },
+      {
+        "talla": "M",
+        "color": "Negro",
+        "colorHex": "#151716",
+        "stock": 3
+      },
+      {
+        "talla": "L",
+        "color": "Negro",
+        "colorHex": "#151716",
+        "stock": 1
+      }
     ],
     "badge": "Exclusiva"
   },
@@ -79,12 +143,29 @@
     "categoria": "chaquetas",
     "precio": 259000,
     "descripcion": "Chaqueta denim clásica con lavado medio y botones metálicos, corte entallado.",
-    "imagen": "https://placehold.co/480x600/f4f3f0/151716?text=Chaqueta+Denim",
-    "imagenes": ["https://placehold.co/800x1000/f4f3f0/151716?text=Chaqueta+Denim+1"],
+    "imagen": "/images/chaquetas-generico.jpg",
+    "imagenes": [
+      "/images/chaquetas-generico.jpg"
+    ],
     "variantes": [
-      { "talla": "S", "color": "Azul medio", "colorHex": "#5b7c99", "stock": 5 },
-      { "talla": "M", "color": "Azul medio", "colorHex": "#5b7c99", "stock": 4 },
-      { "talla": "L", "color": "Azul medio", "colorHex": "#5b7c99", "stock": 3 }
+      {
+        "talla": "S",
+        "color": "Azul medio",
+        "colorHex": "#5b7c99",
+        "stock": 5
+      },
+      {
+        "talla": "M",
+        "color": "Azul medio",
+        "colorHex": "#5b7c99",
+        "stock": 4
+      },
+      {
+        "talla": "L",
+        "color": "Azul medio",
+        "colorHex": "#5b7c99",
+        "stock": 3
+      }
     ]
   },
   {
@@ -94,11 +175,23 @@
     "categoria": "chaquetas",
     "precio": 299000,
     "descripcion": "Blazer estructurado de una botonadura, silueta recta y solapa clásica. Ideal para looks de oficina con actitud.",
-    "imagen": "https://placehold.co/480x600/f4f3f0/151716?text=Blazer+Capri",
-    "imagenes": ["https://placehold.co/800x1000/f4f3f0/151716?text=Blazer+Capri+1"],
+    "imagen": "/images/chaquetas-generico.jpg",
+    "imagenes": [
+      "/images/chaquetas-generico.jpg"
+    ],
     "variantes": [
-      { "talla": "M", "color": "Gris oscuro", "colorHex": "#3a3d3c", "stock": 3 },
-      { "talla": "L", "color": "Gris oscuro", "colorHex": "#3a3d3c", "stock": 2 }
+      {
+        "talla": "M",
+        "color": "Gris oscuro",
+        "colorHex": "#3a3d3c",
+        "stock": 3
+      },
+      {
+        "talla": "L",
+        "color": "Gris oscuro",
+        "colorHex": "#3a3d3c",
+        "stock": 2
+      }
     ],
     "badge": "Últimas unidades"
   },
@@ -109,16 +202,35 @@
     "categoria": "zapatos",
     "precio": 259000,
     "descripcion": "Tacón de cuero genuino, punta fina y altura media (7cm), plantilla acolchada para uso prolongado.",
-    "imagen": "https://placehold.co/480x600/f4f3f0/151716?text=Tacon+Marbella",
+    "imagen": "/images/zapatos-generico.jpg",
     "imagenes": [
-      "https://placehold.co/800x1000/f4f3f0/151716?text=Tacon+Marbella+1",
-      "https://placehold.co/800x1000/151716/38c2bc?text=Tacon+Marbella+2"
+      "/images/zapatos-generico.jpg"
     ],
     "variantes": [
-      { "talla": "36", "color": "Negro", "colorHex": "#151716", "stock": 3 },
-      { "talla": "37", "color": "Negro", "colorHex": "#151716", "stock": 5 },
-      { "talla": "38", "color": "Negro", "colorHex": "#151716", "stock": 4 },
-      { "talla": "37", "color": "Nude", "colorHex": "#d9b9a0", "stock": 2 }
+      {
+        "talla": "36",
+        "color": "Negro",
+        "colorHex": "#151716",
+        "stock": 3
+      },
+      {
+        "talla": "37",
+        "color": "Negro",
+        "colorHex": "#151716",
+        "stock": 5
+      },
+      {
+        "talla": "38",
+        "color": "Negro",
+        "colorHex": "#151716",
+        "stock": 4
+      },
+      {
+        "talla": "37",
+        "color": "Nude",
+        "colorHex": "#d9b9a0",
+        "stock": 2
+      }
     ]
   },
   {
@@ -128,12 +240,29 @@
     "categoria": "zapatos",
     "precio": 189000,
     "descripcion": "Sandalia de tiras finas con hebilla ajustable y suela antideslizante, tacón bajo (3cm).",
-    "imagen": "https://placehold.co/480x600/f4f3f0/151716?text=Sandalia+Luna",
-    "imagenes": ["https://placehold.co/800x1000/f4f3f0/151716?text=Sandalia+Luna+1"],
+    "imagen": "/images/zapatos-generico.jpg",
+    "imagenes": [
+      "/images/zapatos-generico.jpg"
+    ],
     "variantes": [
-      { "talla": "35", "color": "Dorado", "colorHex": "#c9a24b", "stock": 4 },
-      { "talla": "36", "color": "Dorado", "colorHex": "#c9a24b", "stock": 6 },
-      { "talla": "37", "color": "Plata", "colorHex": "#b9bcbb", "stock": 3 }
+      {
+        "talla": "35",
+        "color": "Dorado",
+        "colorHex": "#c9a24b",
+        "stock": 4
+      },
+      {
+        "talla": "36",
+        "color": "Dorado",
+        "colorHex": "#c9a24b",
+        "stock": 6
+      },
+      {
+        "talla": "37",
+        "color": "Plata",
+        "colorHex": "#b9bcbb",
+        "stock": 3
+      }
     ]
   },
   {
@@ -143,12 +272,29 @@
     "categoria": "zapatos",
     "precio": 279000,
     "descripcion": "Botín corto en cuero con cordones laterales y suela de goma texturizada, perfecto para el día a día.",
-    "imagen": "https://placehold.co/480x600/151716/38c2bc?text=Botin+Urban",
-    "imagenes": ["https://placehold.co/800x1000/151716/38c2bc?text=Botin+Urban+1"],
+    "imagen": "/images/zapatos-generico.jpg",
+    "imagenes": [
+      "/images/zapatos-generico.jpg"
+    ],
     "variantes": [
-      { "talla": "36", "color": "Café", "colorHex": "#5a4632", "stock": 2 },
-      { "talla": "37", "color": "Café", "colorHex": "#5a4632", "stock": 3 },
-      { "talla": "38", "color": "Negro", "colorHex": "#151716", "stock": 4 }
+      {
+        "talla": "36",
+        "color": "Café",
+        "colorHex": "#5a4632",
+        "stock": 2
+      },
+      {
+        "talla": "37",
+        "color": "Café",
+        "colorHex": "#5a4632",
+        "stock": 3
+      },
+      {
+        "talla": "38",
+        "color": "Negro",
+        "colorHex": "#151716",
+        "stock": 4
+      }
     ],
     "badge": "Nuevo"
   },
@@ -159,15 +305,29 @@
     "categoria": "faldas",
     "precio": 179000,
     "descripcion": "Falda midi de tiro alto con abertura lateral y cierre invisible, tejido con caída fluida.",
-    "imagen": "https://placehold.co/480x600/f4f3f0/151716?text=Falda+Verona",
+    "imagen": "/images/faldas-generico.jpg",
     "imagenes": [
-      "https://placehold.co/800x1000/f4f3f0/151716?text=Falda+Verona+1",
-      "https://placehold.co/800x1000/38c2bc/151716?text=Falda+Verona+2"
+      "/images/faldas-generico.jpg"
     ],
     "variantes": [
-      { "talla": "S", "color": "Negro", "colorHex": "#151716", "stock": 5 },
-      { "talla": "M", "color": "Negro", "colorHex": "#151716", "stock": 6 },
-      { "talla": "L", "color": "Verde cian", "colorHex": "#38c2bc", "stock": 3 }
+      {
+        "talla": "S",
+        "color": "Negro",
+        "colorHex": "#151716",
+        "stock": 5
+      },
+      {
+        "talla": "M",
+        "color": "Negro",
+        "colorHex": "#151716",
+        "stock": 6
+      },
+      {
+        "talla": "L",
+        "color": "Verde cian",
+        "colorHex": "#38c2bc",
+        "stock": 3
+      }
     ]
   },
   {
@@ -177,11 +337,23 @@
     "categoria": "faldas",
     "precio": 159000,
     "descripcion": "Falda plisada de largo midi con elástico en la cintura, movimiento y ligereza en cada paso.",
-    "imagen": "https://placehold.co/480x600/f4f3f0/151716?text=Falda+Elle",
-    "imagenes": ["https://placehold.co/800x1000/f4f3f0/151716?text=Falda+Elle+1"],
+    "imagen": "/images/faldas-generico.jpg",
+    "imagenes": [
+      "/images/faldas-generico.jpg"
+    ],
     "variantes": [
-      { "talla": "S", "color": "Beige", "colorHex": "#d8cdb8", "stock": 4 },
-      { "talla": "M", "color": "Beige", "colorHex": "#d8cdb8", "stock": 5 }
+      {
+        "talla": "S",
+        "color": "Beige",
+        "colorHex": "#d8cdb8",
+        "stock": 4
+      },
+      {
+        "talla": "M",
+        "color": "Beige",
+        "colorHex": "#d8cdb8",
+        "stock": 5
+      }
     ]
   },
   {
@@ -191,11 +363,23 @@
     "categoria": "faldas",
     "precio": 129000,
     "descripcion": "Falda mini de corte recto con botones frontales decorativos, ideal para looks casuales con actitud.",
-    "imagen": "https://placehold.co/480x600/151716/38c2bc?text=Falda+Alba",
-    "imagenes": ["https://placehold.co/800x1000/151716/38c2bc?text=Falda+Alba+1"],
+    "imagen": "/images/faldas-generico.jpg",
+    "imagenes": [
+      "/images/faldas-generico.jpg"
+    ],
     "variantes": [
-      { "talla": "S", "color": "Negro", "colorHex": "#151716", "stock": 3 },
-      { "talla": "M", "color": "Negro", "colorHex": "#151716", "stock": 2 }
+      {
+        "talla": "S",
+        "color": "Negro",
+        "colorHex": "#151716",
+        "stock": 3
+      },
+      {
+        "talla": "M",
+        "color": "Negro",
+        "colorHex": "#151716",
+        "stock": 2
+      }
     ],
     "badge": "Últimas unidades"
   },
@@ -206,14 +390,23 @@
     "categoria": "bolsos",
     "precio": 219000,
     "descripcion": "Bolso de mano estructurado en cuero sintético premium, compartimento interno y asa desmontable.",
-    "imagen": "https://placehold.co/480x600/151716/38c2bc?text=Bolso+Capri",
+    "imagen": "/images/bolsos-generico.jpg",
     "imagenes": [
-      "https://placehold.co/800x1000/151716/38c2bc?text=Bolso+Capri+1",
-      "https://placehold.co/800x1000/f4f3f0/151716?text=Bolso+Capri+2"
+      "/images/bolsos-generico.jpg"
     ],
     "variantes": [
-      { "talla": "Único", "color": "Negro", "colorHex": "#151716", "stock": 6 },
-      { "talla": "Único", "color": "Verde cian", "colorHex": "#38c2bc", "stock": 3 }
+      {
+        "talla": "Único",
+        "color": "Negro",
+        "colorHex": "#151716",
+        "stock": 6
+      },
+      {
+        "talla": "Único",
+        "color": "Verde cian",
+        "colorHex": "#38c2bc",
+        "stock": 3
+      }
     ],
     "badge": "Nuevo"
   },
@@ -224,11 +417,23 @@
     "categoria": "bolsos",
     "precio": 199000,
     "descripcion": "Tote espacioso de gran capacidad con bolsillo interior con cierre, ideal para el día a día.",
-    "imagen": "https://placehold.co/480x600/f4f3f0/151716?text=Bolso+Tote",
-    "imagenes": ["https://placehold.co/800x1000/f4f3f0/151716?text=Bolso+Tote+1"],
+    "imagen": "/images/bolsos-generico.jpg",
+    "imagenes": [
+      "/images/bolsos-generico.jpg"
+    ],
     "variantes": [
-      { "talla": "Único", "color": "Beige", "colorHex": "#d8cdb8", "stock": 8 },
-      { "talla": "Único", "color": "Negro", "colorHex": "#151716", "stock": 5 }
+      {
+        "talla": "Único",
+        "color": "Beige",
+        "colorHex": "#d8cdb8",
+        "stock": 8
+      },
+      {
+        "talla": "Único",
+        "color": "Negro",
+        "colorHex": "#151716",
+        "stock": 5
+      }
     ]
   },
   {
@@ -238,11 +443,23 @@
     "categoria": "bolsos",
     "precio": 159000,
     "descripcion": "Bolso cruzado compacto con cadena metálica y cierre magnético, perfecto para salidas de noche.",
-    "imagen": "https://placehold.co/480x600/f4f3f0/151716?text=Bolso+Luna",
-    "imagenes": ["https://placehold.co/800x1000/f4f3f0/151716?text=Bolso+Luna+1"],
+    "imagen": "/images/bolsos-generico.jpg",
+    "imagenes": [
+      "/images/bolsos-generico.jpg"
+    ],
     "variantes": [
-      { "talla": "Único", "color": "Dorado", "colorHex": "#c9a24b", "stock": 4 },
-      { "talla": "Único", "color": "Negro", "colorHex": "#151716", "stock": 5 }
+      {
+        "talla": "Único",
+        "color": "Dorado",
+        "colorHex": "#c9a24b",
+        "stock": 4
+      },
+      {
+        "talla": "Único",
+        "color": "Negro",
+        "colorHex": "#151716",
+        "stock": 5
+      }
     ]
   },
   {
@@ -252,11 +469,23 @@
     "categoria": "bolsos",
     "precio": 139000,
     "descripcion": "Clutch de textura brillante con cadena removible, la pieza perfecta para eventos especiales.",
-    "imagen": "https://placehold.co/480x600/151716/38c2bc?text=Clutch+Noche",
-    "imagenes": ["https://placehold.co/800x1000/151716/38c2bc?text=Clutch+Noche+1"],
+    "imagen": "/images/bolsos-generico.jpg",
+    "imagenes": [
+      "/images/bolsos-generico.jpg"
+    ],
     "variantes": [
-      { "talla": "Único", "color": "Plata", "colorHex": "#b9bcbb", "stock": 2 },
-      { "talla": "Único", "color": "Negro", "colorHex": "#151716", "stock": 3 }
+      {
+        "talla": "Único",
+        "color": "Plata",
+        "colorHex": "#b9bcbb",
+        "stock": 2
+      },
+      {
+        "talla": "Único",
+        "color": "Negro",
+        "colorHex": "#151716",
+        "stock": 3
+      }
     ],
     "badge": "Exclusiva"
   }
