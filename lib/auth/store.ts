@@ -102,5 +102,25 @@ export function useAuth() {
     await supabase.auth.signOut();
   }
 
-  return { user, loading, registerUser, loginUser, logoutUser, configured: isSupabaseConfigured() };
+  async function loginWithGoogle(): Promise<AuthResult> {
+    if (!supabase) return { ok: false, error: 'Supabase no está configurado todavía.' };
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin },
+    });
+    if (error) return { ok: false, error: error.message };
+    // signInWithOAuth redirige el navegador a Google — no hay nada más
+    // que hacer aquí, la sesión se completa al volver del redirect.
+    return { ok: true };
+  }
+
+  return {
+    user,
+    loading,
+    registerUser,
+    loginUser,
+    logoutUser,
+    loginWithGoogle,
+    configured: isSupabaseConfigured(),
+  };
 }
