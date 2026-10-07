@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Producto } from '@/lib/data-source/types';
+import { useFavorites } from '@/lib/favorites/store';
 
 const formatoCOP = new Intl.NumberFormat('es-CO', {
   style: 'currency',
@@ -18,6 +19,8 @@ export default function ProductCard({
   onQuickView?: (producto: Producto) => void;
 }) {
   const stockTotal = producto.variantes.reduce((sum, v) => sum + v.stock, 0);
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const favorito = isFavorite(producto.id);
 
   return (
     <article className="flex flex-col overflow-hidden rounded-md bg-surface shadow-card transition-transform hover:-translate-y-1">
@@ -31,6 +34,30 @@ export default function ProductCard({
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
         </Link>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleFavorite(producto.id);
+          }}
+          aria-label={favorito ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+          aria-pressed={favorito}
+          className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 shadow-card"
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill={favorito ? 'currentColor' : 'none'}
+            stroke="currentColor"
+            strokeWidth="1.6"
+            className={favorito ? 'text-accent-dark' : 'text-dark'}
+            aria-hidden="true"
+          >
+            <path d="M12 21s-7-4.4-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.6-9.5 9-9.5 9Z" />
+          </svg>
+        </button>
         {producto.badge && (
           <span className="pointer-events-none absolute left-3 top-3 z-10 rounded-sm bg-accent px-2.5 py-1 text-[0.68rem] font-bold uppercase tracking-wide text-dark">
             {producto.badge}

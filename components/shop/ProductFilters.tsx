@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { Categoria, Producto } from '@/lib/data-source/types';
 import ProductGrid from './ProductGrid';
 
@@ -31,6 +31,10 @@ export default function ProductFilters({
   const [categoria, setCategoria] = useState<Categoria | 'todos'>(categoriaInicial);
   const [busqueda, setBusqueda] = useState(busquedaInicial);
   const [soloDisponibles, setSoloDisponibles] = useState(false);
+
+  useEffect(() => {
+    setBusqueda(busquedaInicial);
+  }, [busquedaInicial]);
   const [orden, setOrden] = useState<'relevancia' | 'menor-precio' | 'mayor-precio'>('relevancia');
 
   const filtrados = useMemo(() => {
@@ -100,21 +104,6 @@ export default function ProductFilters({
             </option>
           ))}
         </select>
-
-        <div className="ml-auto flex min-h-[44px] items-center gap-2 rounded-full border border-black/15 px-4 text-neutral-500">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-            <circle cx="11" cy="11" r="7" />
-            <path d="m21 21-4.3-4.3" />
-          </svg>
-          <input
-            type="search"
-            value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
-            placeholder="Buscar producto…"
-            aria-label="Buscar producto"
-            className="w-40 bg-transparent text-sm outline-none"
-          />
-        </div>
       </div>
 
       <p className="mb-6 text-sm text-neutral-500">

@@ -15,6 +15,7 @@ export interface DatosRegistro {
 }
 
 export interface Usuario {
+  id: string;
   email: string;
   nombre: string;
   apellido: string;
@@ -27,6 +28,7 @@ function mapUser(user: User | null): Usuario | null {
   if (!user) return null;
   const meta = (user.user_metadata ?? {}) as Partial<DatosRegistro>;
   return {
+    id: user.id,
     email: user.email ?? '',
     nombre: meta.nombre ?? '',
     apellido: meta.apellido ?? '',

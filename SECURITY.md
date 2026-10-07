@@ -75,6 +75,28 @@ final de un único archivo, como en un sitio estático).
       `leads` con política de inserción pública y lectura solo para el
       equipo de Jeya).
 
+## Pedidos reales, email y pago Bold (solicitud 07-Oct-2026)
+
+- [x] Tabla `orders` en Supabase (`docs/supabase-orders.sql`) con RLS
+      (`auth.uid() = user_id`) — el agente no tiene permisos de schema,
+      el usuario debe correr ese SQL una sola vez en el SQL Editor de
+      Supabase antes de que "Mis compras" muestre datos reales.
+- [x] Email de confirmación de pedido vía Resend
+      (`app/api/enviar-confirmacion/route.ts`) — falla silenciosamente
+      si `RESEND_API_KEY` no está configurada o si Resend devuelve
+      error; nunca bloquea el checkout.
+- [x] Botón de pago Bold (`app/api/bold-signature/route.ts` +
+      `components/checkout/BoldPaymentButton.tsx`). El `BOLD_SECRET_KEY`
+      solo firma en el servidor — nunca llega al cliente. **Pendiente**:
+      confirmar el `src` del script y los nombres exactos de los
+      atributos `data-*` contra el snippet real del dashboard de Bold
+      (no se pudo verificar en vivo desde este entorno, sin acceso de
+      red a bold.co); el algoritmo de firma SHA256 sí está confirmado
+      contra el plugin oficial de Bold para WooCommerce.
+- [ ] Probar en vivo con credenciales de prueba reales (Resend, Supabase
+      con la tabla ya creada, Bold en modo test) — no se pudo probar
+      end-to-end desde el sandbox de desarrollo por restricciones de red.
+
 ## Pendiente antes de producción (fuera del alcance de este repo)
 
 - [ ] Cuenta y credenciales reales de Mercado Pago (modo producción).
