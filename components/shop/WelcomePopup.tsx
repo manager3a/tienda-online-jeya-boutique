@@ -103,7 +103,7 @@ export default function WelcomePopup() {
 
         <div className="relative hidden h-full min-h-[320px] sm:block">
           <Image
-            src="/images/popup-chaqueta.jpg"
+            src="/images/popup-mujer.jpg"
             alt="Nueva colección Jeya Boutique"
             fill
             sizes="(min-width: 640px) 40vw, 0vw"
