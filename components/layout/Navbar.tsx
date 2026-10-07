@@ -46,7 +46,7 @@ export default function Navbar() {
             <ul className="flex items-center gap-6">
               {CATEGORIAS.map((item) => (
                 <li key={item.href}>
-                  <Link href={item.href} className="text-sm font-medium">
+                  <Link href={item.href} className="text-sm font-medium transition-colors hover:text-accent">
                     {item.label}
                   </Link>
                 </li>
@@ -104,7 +104,7 @@ export default function Navbar() {
               <Link
                 href={item.href}
                 onClick={() => setMenuOpen(false)}
-                className="block min-h-[44px] py-3 text-[1.05rem]"
+                className="block min-h-[44px] py-3 text-[1.05rem] transition-colors hover:text-accent"
               >
                 {item.label}
               </Link>

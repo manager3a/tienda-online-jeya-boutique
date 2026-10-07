@@ -45,12 +45,13 @@ function traducirError(mensaje: string): string {
 }
 
 export default function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const { user, registerUser, loginUser, logoutUser, configured } = useAuth();
+  const { user, registerUser, loginUser, logoutUser, loginWithGoogle, configured } = useAuth();
   const [modo, setModo] = useState<'login' | 'registro'>('registro');
   const [form, setForm] = useState<FormState>(initialForm);
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [formError, setFormError] = useState('');
   const [enviando, setEnviando] = useState(false);
+  const [enviandoGoogle, setEnviandoGoogle] = useState(false);
   const [confirmacionPendiente, setConfirmacionPendiente] = useState(false);
 
   useEffect(() => {
@@ -137,6 +138,17 @@ export default function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClos
     onClose();
   }
 
+  async function handleGoogleClick() {
+    setFormError('');
+    setEnviandoGoogle(true);
+    const result = await loginWithGoogle();
+    setEnviandoGoogle(false);
+    if (!result.ok) {
+      setFormError(traducirError(result.error));
+    }
+    // Si fue ok, el navegador ya está siendo redirigido a Google.
+  }
+
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-dark/60" onClick={closeAndReset} aria-hidden="true" />
@@ -191,6 +203,39 @@ export default function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClos
             <h2 className="mb-6 font-heading text-2xl font-bold text-dark">
               {modo === 'registro' ? 'Únete a Jeya Boutique' : 'Bienvenida de nuevo'}
             </h2>
+
+            <button
+              type="button"
+              onClick={handleGoogleClick}
+              disabled={enviandoGoogle}
+              className="mb-4 flex w-full items-center justify-center gap-3 rounded-sm border border-black/15 bg-white px-4 py-3 text-sm font-medium text-dark transition-colors hover:border-black/30 disabled:opacity-60"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  fill="#4285F4"
+                  d="M23.52 12.27c0-.85-.08-1.67-.22-2.45H12v4.63h6.46a5.53 5.53 0 0 1-2.4 3.63v3h3.87c2.27-2.09 3.58-5.17 3.58-8.81Z"
+                />
+                <path
+                  fill="#34A853"
+                  d="M12 24c3.24 0 5.96-1.07 7.94-2.92l-3.87-3c-1.08.72-2.46 1.15-4.07 1.15-3.13 0-5.78-2.11-6.73-4.96H1.27v3.1A12 12 0 0 0 12 24Z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M5.27 14.27A7.2 7.2 0 0 1 4.89 12c0-.79.14-1.56.38-2.27v-3.1H1.27A12 12 0 0 0 0 12c0 1.94.46 3.77 1.27 5.37l4-3.1Z"
+                />
+                <path
+                  fill="#EA4335"
+                  d="M12 4.77c1.76 0 3.34.61 4.58 1.8l3.43-3.43C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.69 1.27 6.63l4 3.1C6.22 6.88 8.87 4.77 12 4.77Z"
+                />
+              </svg>
+              {enviandoGoogle ? 'Conectando…' : 'Continuar con Google'}
+            </button>
+
+            <div className="mb-4 flex items-center gap-3 text-xs text-neutral-400">
+              <span className="h-px flex-1 bg-black/10" />
+              o con tu correo
+              <span className="h-px flex-1 bg-black/10" />
+            </div>
 
             {modo === 'registro' ? (
               <form onSubmit={handleRegister} noValidate className="space-y-4">

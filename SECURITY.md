@@ -55,6 +55,16 @@ final de un único archivo, como en un sitio estático).
       frontend y protegida por Row Level Security. La clave
       **`service_role`/`secret`** de Supabase NUNCA debe usarse aquí ni
       en ningún código que llegue al navegador — solo en backend/n8n.
+- [x] Inicio de sesión / registro con **Google** (`lib/auth/store.ts` →
+      `loginWithGoogle`, botón en `components/auth/AuthModal.tsx`) vía
+      `supabase.auth.signInWithOAuth({ provider: 'google' })`. **Pendiente
+      de configurar en el dashboard de Supabase** (Authentication →
+      Providers → Google): crear un OAuth Client ID/Secret en Google
+      Cloud Console, pegarlos ahí, y agregar la URL de callback que
+      Supabase muestra en esa pantalla a los "Authorized redirect URIs"
+      del cliente de Google. Sin eso, el botón redirige a un error de
+      Google. No se pudo probar en vivo desde este sandbox (sin acceso
+      de red a accounts.google.com).
 - [ ] Contraseñas: Supabase exige mínimo 6 caracteres por defecto: para
       un e-commerce real, subir ese mínimo y activar protección contra
       contraseñas filtradas en Supabase → Authentication → Policies.
