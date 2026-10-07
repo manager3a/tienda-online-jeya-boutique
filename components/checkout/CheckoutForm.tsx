@@ -6,9 +6,14 @@ import { useCart, calculateSubtotal, clearCart } from '@/lib/cart/store';
 import { calculateShippingCost } from '@/lib/shipping/rules';
 import { generateOrderId } from '@/lib/orders/order-id';
 import { saveOrder } from '@/lib/orders/store';
+import { saveOrderToSupabase } from '@/lib/orders/supabase';
+import { useAuth } from '@/lib/auth/store';
 import type { MetodoEnvio, Pedido } from '@/lib/data-source/types';
 import ShippingSelector from './ShippingSelector';
 import OrderSummary from './OrderSummary';
+import BoldPaymentButton from './BoldPaymentButton';
+
+type MetodoPago = 'mercadopago' | 'bold';
 
 interface FormState {
   nombre: string;
@@ -31,11 +36,15 @@ const initialForm: FormState = {
 export default function CheckoutForm() {
   const router = useRouter();
   const { items } = useCart();
+  const { user } = useAuth();
   const [metodoEnvio, setMetodoEnvio] = useState<MetodoEnvio>('nacional');
+  const [metodoPago, setMetodoPago] = useState<MetodoPago>('mercadopago');
   const [form, setForm] = useState<FormState>(initialForm);
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [honeypot, setHoneypot] = useState('');
   const [procesando, setProcesando] = useState(false);
+  const [pedidoListo, setPedidoListo] = useState(false);
+  const [orderId] = useState(() => generateOrderId());
 
   const subtotal = useMemo(() => calculateSubtotal(items), [items]);
   const costoEnvio = calculateShippingCost(metodoEnvio);
@@ -89,7 +98,6 @@ export default function CheckoutForm() {
     // Mercado Pago (Wallet Brick) y solo se confirma el pedido tras el
     // webhook de pago aprobado. En Fase 2 se simula la confirmación
     // porque el backend de pagos vive fuera de este repo.
-    const orderId = generateOrderId();
     const pedido: Pedido = {
       orderId,
       fecha: new Date().toISOString(),
@@ -114,7 +122,32 @@ export default function CheckoutForm() {
     };
 
     saveOrder(pedido);
+
+    // Fire-and-forget: el email es un "nice to have", nunca debe bloquear
+    // la confirmación de la compra ni la navegación si Resend falla.
+    fetch('/api/enviar-confirmacion', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(pedido),
+    }).catch((error) => console.error('[checkout] No se pudo enviar el email de confirmación:', error));
+
+    if (user) {
+      saveOrderToSupabase(pedido, user.id).catch((error) =>
+        console.error('[checkout] No se pudo guardar el pedido en Supabase:', error)
+      );
+    }
     clearCart();
+
+    if (metodoPago === 'bold') {
+      // Bold redirige a su propio checkout (checkout.bold.co) y solo
+      // vuelve a redirectionUrl una vez el pago se procesa ahí — por eso
+      // no navegamos de inmediato, se muestra su botón oficial para que
+      // la compradora continúe el pago.
+      setPedidoListo(true);
+      setProcesando(false);
+      return;
+    }
+
     router.push(`/confirmacion/${encodeURIComponent(orderId)}`);
   }
 
@@ -241,19 +274,77 @@ export default function CheckoutForm() {
           <legend className="mb-4 font-heading text-xl font-semibold text-dark">
             Método de pago
           </legend>
-          <div className="rounded-sm border border-black/15 p-4">
-            <p className="mb-1 flex items-center gap-2 text-sm font-semibold text-dark">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                <rect x="5" y="11" width="14" height="9" rx="2" />
-                <path d="M8 11V8a4 4 0 0 1 8 0v3" />
-              </svg>
-              Pago seguro con Mercado Pago
-            </p>
-            <p className="text-xs text-neutral-500">
-              Tarjetas, PSE y Nequi. Serás redirigida al checkout oficial de Mercado Pago para
-              ingresar los datos de pago — Jeya Boutique nunca almacena datos de tu tarjeta.
-            </p>
+          <div className="mb-3 flex gap-3">
+            <label className="flex min-h-[44px] flex-1 items-center gap-2 rounded-sm border border-black/15 px-4 text-sm">
+              <input
+                type="radio"
+                name="metodoPago"
+                checked={metodoPago === 'mercadopago'}
+                onChange={() => {
+                  setMetodoPago('mercadopago');
+                  setPedidoListo(false);
+                }}
+                className="h-4 w-4 accent-accent"
+              />
+              Mercado Pago
+            </label>
+            <label className="flex min-h-[44px] flex-1 items-center gap-2 rounded-sm border border-black/15 px-4 text-sm">
+              <input
+                type="radio"
+                name="metodoPago"
+                checked={metodoPago === 'bold'}
+                onChange={() => {
+                  setMetodoPago('bold');
+                  setPedidoListo(false);
+                }}
+                className="h-4 w-4 accent-accent"
+              />
+              Bold
+            </label>
           </div>
+
+          {metodoPago === 'mercadopago' ? (
+            <div className="rounded-sm border border-black/15 p-4">
+              <p className="mb-1 flex items-center gap-2 text-sm font-semibold text-dark">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                  <rect x="5" y="11" width="14" height="9" rx="2" />
+                  <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+                </svg>
+                Pago seguro con Mercado Pago
+              </p>
+              <p className="text-xs text-neutral-500">
+                Tarjetas, PSE y Nequi. Serás redirigida al checkout oficial de Mercado Pago para
+                ingresar los datos de pago — Jeya Boutique nunca almacena datos de tu tarjeta.
+              </p>
+            </div>
+          ) : (
+            <div className="rounded-sm border border-black/15 p-4">
+              <p className="mb-1 flex items-center gap-2 text-sm font-semibold text-dark">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                  <rect x="5" y="11" width="14" height="9" rx="2" />
+                  <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+                </svg>
+                Pago seguro con Bold
+              </p>
+              <p className="mb-3 text-xs text-neutral-500">
+                Tarjetas, PSE, Nequi y más. Primero guarda tus datos y luego serás redirigida al
+                checkout oficial de Bold para pagar.
+              </p>
+              {pedidoListo && (
+                <BoldPaymentButton
+                  orderReference={orderId}
+                  amount={subtotal + costoEnvio}
+                  currency="COP"
+                  description={`Pedido Jeya Boutique ${orderId}`}
+                  redirectionUrl={
+                    typeof window !== 'undefined'
+                      ? `${window.location.origin}/confirmacion/${encodeURIComponent(orderId)}`
+                      : `/confirmacion/${encodeURIComponent(orderId)}`
+                  }
+                />
+              )}
+            </div>
+          )}
         </fieldset>
 
         {/* Honeypot anti-bot: invisible para personas, atractivo para bots. */}
@@ -268,9 +359,15 @@ export default function CheckoutForm() {
           className="absolute -left-[9999px] h-0 w-0 opacity-0"
         />
 
-        <button type="submit" disabled={procesando} className="btn-primary w-full sm:w-auto">
-          {procesando ? 'Procesando…' : 'Confirmar y pagar'}
-        </button>
+        {!(metodoPago === 'bold' && pedidoListo) && (
+          <button type="submit" disabled={procesando} className="btn-primary w-full sm:w-auto">
+            {procesando
+              ? 'Procesando…'
+              : metodoPago === 'bold'
+                ? 'Guardar datos y continuar con Bold'
+                : 'Confirmar y pagar'}
+          </button>
+        )}
       </div>
 
       <OrderSummary items={items} subtotal={subtotal} costoEnvio={costoEnvio} />
