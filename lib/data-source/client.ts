@@ -11,6 +11,15 @@ export function getAllProducts(): Producto[] {
   return mockProducts as Producto[];
 }
 
+/** Catálogo de ropa/accesorios, sin las tarjetas de regalo (tienen su propia página en /tarjetas). */
+export function getShopProducts(): Producto[] {
+  return getAllProducts().filter((p) => p.categoria !== 'tarjetas');
+}
+
+export function getGiftCards(): Producto[] {
+  return getAllProducts().filter((p) => p.categoria === 'tarjetas');
+}
+
 export function getProductBySlug(slug: string): Producto | undefined {
   return getAllProducts().find((p) => p.slug === slug);
 }

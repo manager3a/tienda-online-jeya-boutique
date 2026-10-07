@@ -4,7 +4,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useCart } from '@/lib/cart/store';
+import { useAuth } from '@/lib/auth/store';
 import CartDrawer from '@/components/shop/CartDrawer';
+import SearchBox from './SearchBox';
+import AuthModal from '@/components/auth/AuthModal';
 
 const CATEGORIAS = [
   { label: 'Catálogo', href: '/productos' },
@@ -13,13 +16,16 @@ const CATEGORIAS = [
   { label: 'Zapatos', href: '/productos?categoria=zapatos' },
   { label: 'Faldas', href: '/productos?categoria=faldas' },
   { label: 'Bolsos', href: '/productos?categoria=bolsos' },
+  { label: 'Regala una tarjeta', href: '/tarjetas' },
   { label: 'Seguimiento de pedido', href: '/seguimiento' },
 ];
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
   const { count } = useCart();
+  const { user } = useAuth();
 
   return (
     <>
@@ -29,15 +35,15 @@ export default function Navbar() {
             <Image
               src="/images/logo-jeya.jpg"
               alt="Jeya Boutique"
-              width={48}
-              height={48}
+              width={64}
+              height={64}
               priority
-              className="h-11 w-11 rounded-full object-cover"
+              className="h-[57px] w-[57px] rounded-full object-cover"
             />
           </Link>
 
-          <nav aria-label="Menú principal" className="hidden lg:flex lg:items-center lg:gap-7">
-            <ul className="flex items-center gap-7">
+          <nav aria-label="Menú principal" className="hidden lg:flex lg:items-center lg:gap-6">
+            <ul className="flex items-center gap-6">
               {CATEGORIAS.map((item) => (
                 <li key={item.href}>
                   <Link href={item.href} className="text-sm font-medium">
@@ -48,18 +54,23 @@ export default function Navbar() {
             </ul>
           </nav>
 
-          <div className="hidden items-center gap-5 lg:flex">
+          <div className="hidden items-center gap-4 lg:flex">
+            <AccountButton
+              name={user?.nombre}
+              onClick={() => setAuthOpen(true)}
+            />
             <CartButton count={count} onClick={() => setCartOpen(true)} />
             <Link href="/productos" className="btn-primary">
               Ver productos
             </Link>
           </div>
 
-          <div className="flex items-center gap-2 lg:hidden">
+          <div className="flex items-center gap-1 lg:hidden">
+            <AccountButton name={user?.nombre} onClick={() => setAuthOpen(true)} />
             <CartButton count={count} onClick={() => setCartOpen(true)} />
             <button
               type="button"
-              className="flex h-11 w-11 flex-col items-center justify-center gap-1.5"
+              className="flex h-11 w-11 flex-shrink-0 flex-col items-center justify-center gap-1.5"
               aria-expanded={menuOpen}
               aria-controls="nav-menu"
               aria-label="Abrir menú"
@@ -69,6 +80,12 @@ export default function Navbar() {
               <span className="block h-0.5 w-6 bg-dark" />
               <span className="block h-0.5 w-6 bg-dark" />
             </button>
+          </div>
+        </div>
+
+        <div className="border-t border-black/5 px-5 py-2.5">
+          <div className="mx-auto max-w-xl">
+            <SearchBox />
           </div>
         </div>
       </header>
@@ -106,6 +123,7 @@ export default function Navbar() {
       </nav>
 
       <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
+      <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
     </>
   );
 }
@@ -126,6 +144,23 @@ function CartButton({ count, onClick }: { count: number; onClick: () => void }) 
       <span className="absolute -right-0.5 -top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-accent px-1 text-[0.65rem] font-bold text-dark">
         {count}
       </span>
+    </button>
+  );
+}
+
+function AccountButton({ name, onClick }: { name?: string; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="inline-flex h-11 w-11 items-center justify-center"
+      aria-label={name ? `Cuenta de ${name}` : 'Iniciar sesión o registrarse'}
+      title={name ? `Hola, ${name}` : 'Iniciar sesión o registrarse'}
+    >
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+        <circle cx="12" cy="8" r="4" />
+        <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8" />
+      </svg>
     </button>
   );
 }

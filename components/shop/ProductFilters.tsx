@@ -22,12 +22,14 @@ const ORDEN: { id: 'relevancia' | 'menor-precio' | 'mayor-precio'; label: string
 export default function ProductFilters({
   productos,
   categoriaInicial = 'todos',
+  busquedaInicial = '',
 }: {
   productos: Producto[];
   categoriaInicial?: Categoria | 'todos';
+  busquedaInicial?: string;
 }) {
   const [categoria, setCategoria] = useState<Categoria | 'todos'>(categoriaInicial);
-  const [busqueda, setBusqueda] = useState('');
+  const [busqueda, setBusqueda] = useState(busquedaInicial);
   const [soloDisponibles, setSoloDisponibles] = useState(false);
   const [orden, setOrden] = useState<'relevancia' | 'menor-precio' | 'mayor-precio'>('relevancia');
 

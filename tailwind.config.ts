@@ -20,7 +20,9 @@ const config: Config = {
         bg: '#faf9f7',
       },
       fontFamily: {
-        heading: ['var(--font-cormorant)', 'serif'],
+        // Proxima Nova (de pago) sustituida por Montserrat, la más cercana
+        // disponible libremente: semibold/bold en títulos, regular en texto.
+        heading: ['var(--font-montserrat)', 'sans-serif'],
         body: ['var(--font-montserrat)', 'sans-serif'],
       },
       borderRadius: {

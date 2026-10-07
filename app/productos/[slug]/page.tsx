@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getAllProducts, getProductBySlug } from '@/lib/data-source/client';
+import { getShopProducts, getProductBySlug } from '@/lib/data-source/client';
 import ProductVariantForm from '@/components/shop/ProductVariantForm';
 import ProductGrid from '@/components/shop/ProductGrid';
 
@@ -13,7 +13,7 @@ const formatoCOP = new Intl.NumberFormat('es-CO', {
 });
 
 export function generateStaticParams() {
-  return getAllProducts().map((p) => ({ slug: p.slug }));
+  return getShopProducts().map((p) => ({ slug: p.slug }));
 }
 
 export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
@@ -29,7 +29,7 @@ export default function ProductoDetallePage({ params }: { params: { slug: string
   const producto = getProductBySlug(params.slug);
   if (!producto) notFound();
 
-  const relacionados = getAllProducts()
+  const relacionados = getShopProducts()
     .filter((p) => p.categoria === producto.categoria && p.id !== producto.id)
     .slice(0, 4);
 

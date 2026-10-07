@@ -1,4 +1,4 @@
-export type Categoria = 'blusas' | 'chaquetas' | 'zapatos' | 'faldas' | 'bolsos';
+export type Categoria = 'blusas' | 'chaquetas' | 'zapatos' | 'faldas' | 'bolsos' | 'tarjetas';
 
 export interface Variante {
   talla: string;

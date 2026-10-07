@@ -44,6 +44,23 @@ final de un único archivo, como en un sitio estático).
 - [ ] Cumplir PCI-DSS: no aplica directamente porque Jeya Boutique nunca
       procesa datos de tarjeta — los recibe y procesa Mercado Pago.
 
+## Cuentas de usuario (Fase 3)
+
+- [ ] `lib/auth/store.ts` es un mock 100% client-side: registro/login sin
+      contraseña ni verificación de servidor, solo reconoce un correo ya
+      guardado en `localStorage` de ese navegador. **No usar así en
+      producción** — antes de lanzar, reemplazar por autenticación real
+      (hash de contraseña o proveedor OAuth, sesión firmada en servidor).
+- [ ] Los datos de registro (nombre, apellido, correo, teléfono, fecha de
+      nacimiento) y los leads del popup de bienvenida
+      (`components/shop/WelcomePopup.tsx`) se guardan sin cifrar en
+      `localStorage` — son datos personales; no replicar este patrón una
+      vez exista backend real, y purgar estos datos de prueba antes de ir
+      a producción.
+- [ ] El popup de bienvenida solo pide los datos mínimos para el cupón
+      (correo, celular, fecha de nacimiento); el registro completo pide
+      también nombre y apellido, igual que indicó el cliente.
+
 ## Pendiente antes de producción (fuera del alcance de este repo)
 
 - [ ] Cuenta y credenciales reales de Mercado Pago (modo producción).
@@ -51,3 +68,10 @@ final de un único archivo, como en un sitio estático).
 - [ ] Clave real de reCAPTCHA v3.
 - [ ] Backend real de pedidos (hoy simulado en `localStorage` del
       comprador para la Fase 2).
+- [ ] Backend real de autenticación de usuarios (ver sección "Cuentas de
+      usuario" arriba).
+- [ ] Logos oficiales de medios de pago: `components/layout/PaymentLogos.tsx`
+      usa wordmarks recreados en SVG (vectoriales, nítidos a cualquier
+      tamaño) porque este entorno no tuvo acceso a los archivos de marca
+      oficiales — reemplazar por los assets reales cuando el cliente o
+      cada pasarela los facilite.
