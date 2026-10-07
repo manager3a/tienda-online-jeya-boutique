@@ -74,7 +74,11 @@ export default function BoldPaymentButton({
   }, [signature, amount, currency, orderReference, redirectionUrl, description]);
 
   if (!process.env.NEXT_PUBLIC_BOLD_API_KEY) {
-    return null;
+    return (
+      <p className="text-xs text-red-600">
+        Bold aún no está configurado — falta agregar NEXT_PUBLIC_BOLD_API_KEY en Vercel.
+      </p>
+    );
   }
 
   return (

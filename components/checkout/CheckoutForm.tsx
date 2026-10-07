@@ -44,10 +44,15 @@ export default function CheckoutForm() {
   const [honeypot, setHoneypot] = useState('');
   const [procesando, setProcesando] = useState(false);
   const [pedidoListo, setPedidoListo] = useState(false);
+  const [ultimoPedido, setUltimoPedido] = useState<Pedido | null>(null);
   const [orderId] = useState(() => generateOrderId());
 
   const subtotal = useMemo(() => calculateSubtotal(items), [items]);
   const costoEnvio = calculateShippingCost(metodoEnvio);
+
+  const itemsResumen = pedidoListo && ultimoPedido ? ultimoPedido.items : items;
+  const subtotalResumen = pedidoListo && ultimoPedido ? ultimoPedido.subtotal : subtotal;
+  const costoEnvioResumen = pedidoListo && ultimoPedido ? ultimoPedido.costoEnvio : costoEnvio;
 
   function handleChange(field: keyof FormState, value: string) {
     setForm((f) => ({ ...f, [field]: value }));
@@ -122,6 +127,7 @@ export default function CheckoutForm() {
     };
 
     saveOrder(pedido);
+    setUltimoPedido(pedido);
 
     // Fire-and-forget: el email es un "nice to have", nunca debe bloquear
     // la confirmación de la compra ni la navegación si Resend falla.
@@ -151,7 +157,7 @@ export default function CheckoutForm() {
     router.push(`/confirmacion/${encodeURIComponent(orderId)}`);
   }
 
-  if (items.length === 0) {
+  if (items.length === 0 && !pedidoListo) {
     return (
       <p className="rounded-sm bg-surface-alt p-6 text-center text-neutral-600">
         Tu carrito está vacío. Agrega productos antes de finalizar la compra.
@@ -333,7 +339,7 @@ export default function CheckoutForm() {
               {pedidoListo && (
                 <BoldPaymentButton
                   orderReference={orderId}
-                  amount={subtotal + costoEnvio}
+                  amount={subtotalResumen + costoEnvioResumen}
                   currency="COP"
                   description={`Pedido Jeya Boutique ${orderId}`}
                   redirectionUrl={
@@ -370,7 +376,7 @@ export default function CheckoutForm() {
         )}
       </div>
 
-      <OrderSummary items={items} subtotal={subtotal} costoEnvio={costoEnvio} />
+      <OrderSummary items={itemsResumen} subtotal={subtotalResumen} costoEnvio={costoEnvioResumen} />
     </form>
   );
 }
