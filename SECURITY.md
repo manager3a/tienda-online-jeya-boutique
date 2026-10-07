@@ -44,22 +44,36 @@ final de un único archivo, como en un sitio estático).
 - [ ] Cumplir PCI-DSS: no aplica directamente porque Jeya Boutique nunca
       procesa datos de tarjeta — los recibe y procesa Mercado Pago.
 
-## Cuentas de usuario (Fase 3)
+## Cuentas de usuario (Fase 3 → Supabase Auth)
 
-- [ ] `lib/auth/store.ts` es un mock 100% client-side: registro/login sin
-      contraseña ni verificación de servidor, solo reconoce un correo ya
-      guardado en `localStorage` de ese navegador. **No usar así en
-      producción** — antes de lanzar, reemplazar por autenticación real
-      (hash de contraseña o proveedor OAuth, sesión firmada en servidor).
-- [ ] Los datos de registro (nombre, apellido, correo, teléfono, fecha de
-      nacimiento) y los leads del popup de bienvenida
-      (`components/shop/WelcomePopup.tsx`) se guardan sin cifrar en
-      `localStorage` — son datos personales; no replicar este patrón una
-      vez exista backend real, y purgar estos datos de prueba antes de ir
-      a producción.
-- [ ] El popup de bienvenida solo pide los datos mínimos para el cupón
-      (correo, celular, fecha de nacimiento); el registro completo pide
-      también nombre y apellido, igual que indicó el cliente.
+- [x] `lib/auth/store.ts` usa **Supabase Auth** real (email + contraseña):
+      registro, login, sesión persistida y cierre de sesión. Supabase
+      envía automáticamente el correo de confirmación al registrarse — no
+      requiere backend ni servicio de email propio.
+- [x] `lib/supabase/client.ts` solo usa la clave **publishable/anon**
+      (`NEXT_PUBLIC_SUPABASE_ANON_KEY`), diseñada para exponerse en el
+      frontend y protegida por Row Level Security. La clave
+      **`service_role`/`secret`** de Supabase NUNCA debe usarse aquí ni
+      en ningún código que llegue al navegador — solo en backend/n8n.
+- [ ] Contraseñas: Supabase exige mínimo 6 caracteres por defecto: para
+      un e-commerce real, subir ese mínimo y activar protección contra
+      contraseñas filtradas en Supabase → Authentication → Policies.
+- [ ] Configurar en el dashboard de Supabase (Authentication → URL
+      Configuration) el **Site URL** y **Redirect URLs** apuntando al
+      dominio real de producción (`https://tienda-online-jeya-boutique.vercel.app`
+      y el dominio final si cambia) — si no, el link del correo de
+      confirmación redirige a `localhost`.
+- [ ] Nombre, apellido, país, teléfono y fecha de nacimiento se guardan
+      como `user_metadata` de Supabase Auth (no hay tabla propia todavía).
+      Si más adelante se necesita consultarlos desde otras partes del
+      sistema (ej. el conector de n8n), crear una tabla `profiles` con
+      RLS (`auth.uid() = id`) en vez de leer `user_metadata` directamente.
+- [ ] El popup de bienvenida (`components/shop/WelcomePopup.tsx`) sigue
+      siendo un mock en `localStorage` — es solo un lead de marketing
+      (correo, celular, fecha de nacimiento), no crea una cuenta. Antes de
+      producción, decidir si esos leads también deben ir a Supabase (tabla
+      `leads` con política de inserción pública y lectura solo para el
+      equipo de Jeya).
 
 ## Pendiente antes de producción (fuera del alcance de este repo)
 
@@ -68,8 +82,11 @@ final de un único archivo, como en un sitio estático).
 - [ ] Clave real de reCAPTCHA v3.
 - [ ] Backend real de pedidos (hoy simulado en `localStorage` del
       comprador para la Fase 2).
-- [ ] Backend real de autenticación de usuarios (ver sección "Cuentas de
-      usuario" arriba).
+- [x] Backend real de autenticación de usuarios — resuelto con Supabase
+      Auth (ver sección "Cuentas de usuario" arriba). Pendiente: configurar
+      Site URL/Redirect URLs en el dashboard de Supabase y agregar las dos
+      variables `NEXT_PUBLIC_SUPABASE_*` en Vercel → Project Settings →
+      Environment Variables.
 - [ ] Logos oficiales de medios de pago: `components/layout/PaymentLogos.tsx`
       usa wordmarks recreados en SVG (vectoriales, nítidos a cualquier
       tamaño) porque este entorno no tuvo acceso a los archivos de marca

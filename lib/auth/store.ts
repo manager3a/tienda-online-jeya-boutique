@@ -1,106 +1,104 @@
 'use client';
 
-import { useSyncExternalStore } from 'react';
+import { useEffect, useState } from 'react';
+import type { User } from '@supabase/supabase-js';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase/client';
 
-export interface Usuario {
+export interface DatosRegistro {
+  nombre: string;
+  apellido: string;
   email: string;
+  password: string;
   pais: string;
   telefono: string;
   fechaNacimiento: string; // YYYY-MM-DD
+}
+
+export interface Usuario {
+  email: string;
   nombre: string;
   apellido: string;
+  pais: string;
+  telefono: string;
+  fechaNacimiento: string;
 }
 
-const CURRENT_USER_KEY = 'jeya-current-user';
-const USERS_KEY = 'jeya-users-v1';
+function mapUser(user: User | null): Usuario | null {
+  if (!user) return null;
+  const meta = (user.user_metadata ?? {}) as Partial<DatosRegistro>;
+  return {
+    email: user.email ?? '',
+    nombre: meta.nombre ?? '',
+    apellido: meta.apellido ?? '',
+    pais: meta.pais ?? '',
+    telefono: meta.telefono ?? '',
+    fechaNacimiento: meta.fechaNacimiento ?? '',
+  };
+}
+
+type AuthResult = { ok: true; needsEmailConfirmation?: boolean } | { ok: false; error: string };
 
 /**
- * Registro/login mock 100% client-side (localStorage), consistente con el
- * resto de la tienda en esta fase (carrito y pedidos también son mock
- * hasta que exista backend real). No hay contraseña ni verificación: el
- * "login" solo reconoce un correo ya registrado en este navegador. Antes
- * de producción esto debe reemplazarse por autenticación real en servidor
- * (ver SECURITY.md).
+ * Autenticación real con Supabase Auth (email + contraseña). Supabase
+ * envía el correo de confirmación automáticamente al registrarse — no
+ * requiere backend ni servicio de email propio. Ver SECURITY.md para la
+ * configuración pendiente en el dashboard de Supabase (Site URL, política
+ * de RLS si se agregan tablas de perfil más adelante).
  */
-let currentUser: Usuario | null = null;
-let hydrated = false;
-const listeners = new Set<() => void>();
-
-function readUsers(): Record<string, Usuario> {
-  if (typeof window === 'undefined') return {};
-  try {
-    const raw = window.localStorage.getItem(USERS_KEY);
-    return raw ? (JSON.parse(raw) as Record<string, Usuario>) : {};
-  } catch {
-    return {};
-  }
-}
-
-function writeUsers(users: Record<string, Usuario>) {
-  if (typeof window === 'undefined') return;
-  window.localStorage.setItem(USERS_KEY, JSON.stringify(users));
-}
-
-function ensureHydrated() {
-  if (hydrated || typeof window === 'undefined') return;
-  try {
-    const raw = window.localStorage.getItem(CURRENT_USER_KEY);
-    currentUser = raw ? (JSON.parse(raw) as Usuario) : null;
-  } catch {
-    currentUser = null;
-  }
-  hydrated = true;
-}
-
-function persistCurrentUser() {
-  if (typeof window === 'undefined') return;
-  if (currentUser) {
-    window.localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
-  } else {
-    window.localStorage.removeItem(CURRENT_USER_KEY);
-  }
-  listeners.forEach((l) => l());
-}
-
-function subscribe(callback: () => void) {
-  listeners.add(callback);
-  return () => listeners.delete(callback);
-}
-
-function getSnapshot() {
-  ensureHydrated();
-  return currentUser;
-}
-
-function getServerSnapshot() {
-  return null;
-}
-
-export function registerUser(usuario: Usuario) {
-  ensureHydrated();
-  const users = readUsers();
-  users[usuario.email.toLowerCase()] = usuario;
-  writeUsers(users);
-  currentUser = usuario;
-  persistCurrentUser();
-}
-
-export function loginByEmail(email: string): boolean {
-  ensureHydrated();
-  const users = readUsers();
-  const found = users[email.trim().toLowerCase()];
-  if (!found) return false;
-  currentUser = found;
-  persistCurrentUser();
-  return true;
-}
-
-export function logoutUser() {
-  currentUser = null;
-  persistCurrentUser();
-}
-
 export function useAuth() {
-  const user = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-  return { user, registerUser, loginByEmail, logoutUser };
+  const [user, setUser] = useState<Usuario | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!supabase) {
+      setLoading(false);
+      return;
+    }
+    supabase.auth.getSession().then(({ data }) => {
+      setUser(mapUser(data.session?.user ?? null));
+      setLoading(false);
+    });
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(mapUser(session?.user ?? null));
+    });
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  async function registerUser(datos: DatosRegistro): Promise<AuthResult> {
+    if (!supabase) return { ok: false, error: 'Supabase no está configurado todavía.' };
+    const { data, error } = await supabase.auth.signUp({
+      email: datos.email,
+      password: datos.password,
+      options: {
+        data: {
+          nombre: datos.nombre,
+          apellido: datos.apellido,
+          pais: datos.pais,
+          telefono: datos.telefono,
+          fechaNacimiento: datos.fechaNacimiento,
+        },
+      },
+    });
+    if (error) return { ok: false, error: error.message };
+    // Con confirmación de correo activada, Supabase no entrega una sesión
+    // hasta que se confirme el email (identities vacío = correo ya existía).
+    if (data.user && data.user.identities && data.user.identities.length === 0) {
+      return { ok: false, error: 'Ya existe una cuenta registrada con ese correo.' };
+    }
+    return { ok: true, needsEmailConfirmation: !data.session };
+  }
+
+  async function loginUser(email: string, password: string): Promise<AuthResult> {
+    if (!supabase) return { ok: false, error: 'Supabase no está configurado todavía.' };
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) return { ok: false, error: error.message };
+    return { ok: true };
+  }
+
+  async function logoutUser() {
+    if (!supabase) return;
+    await supabase.auth.signOut();
+  }
+
+  return { user, loading, registerUser, loginUser, logoutUser, configured: isSupabaseConfigured() };
 }
