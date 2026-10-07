@@ -2,9 +2,9 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useCart } from '@/lib/cart/store';
-import { useAuth } from '@/lib/auth/store';
+import { useAuth, type Usuario } from '@/lib/auth/store';
 import CartDrawer from '@/components/shop/CartDrawer';
 import SearchBox from './SearchBox';
 import AuthModal from '@/components/auth/AuthModal';
@@ -25,7 +25,7 @@ export default function Navbar() {
   const [cartOpen, setCartOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const { count } = useCart();
-  const { user } = useAuth();
+  const { user, logoutUser } = useAuth();
 
   return (
     <>
@@ -55,18 +55,12 @@ export default function Navbar() {
           </nav>
 
           <div className="hidden items-center gap-4 lg:flex">
-            <AccountButton
-              name={user?.nombre}
-              onClick={() => setAuthOpen(true)}
-            />
+            <AccountButton user={user} onLoginClick={() => setAuthOpen(true)} onLogout={logoutUser} />
             <CartButton count={count} onClick={() => setCartOpen(true)} />
-            <Link href="/productos" className="btn-primary">
-              Ver productos
-            </Link>
           </div>
 
           <div className="flex items-center gap-1 lg:hidden">
-            <AccountButton name={user?.nombre} onClick={() => setAuthOpen(true)} />
+            <AccountButton user={user} onLoginClick={() => setAuthOpen(true)} onLogout={logoutUser} />
             <CartButton count={count} onClick={() => setCartOpen(true)} />
             <button
               type="button"
@@ -117,9 +111,6 @@ export default function Navbar() {
             </li>
           ))}
         </ul>
-        <Link href="/productos" onClick={() => setMenuOpen(false)} className="btn-primary text-center">
-          Ver productos
-        </Link>
       </nav>
 
       <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
@@ -148,19 +139,109 @@ function CartButton({ count, onClick }: { count: number; onClick: () => void }) 
   );
 }
 
-function AccountButton({ name, onClick }: { name?: string; onClick: () => void }) {
+function AccountButton({
+  user,
+  onLoginClick,
+  onLogout,
+}: {
+  user?: Usuario | null;
+  onLoginClick: () => void;
+  onLogout: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function onClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') setOpen(false);
+    }
+    document.addEventListener('click', onClickOutside);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('click', onClickOutside);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [open]);
+
+  if (!user) {
+    return (
+      <button
+        type="button"
+        onClick={onLoginClick}
+        className="inline-flex h-11 w-11 items-center justify-center"
+        aria-label="Iniciar sesión o registrarse"
+        title="Iniciar sesión o registrarse"
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8" />
+        </svg>
+      </button>
+    );
+  }
+
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="inline-flex h-11 w-11 items-center justify-center"
-      aria-label={name ? `Cuenta de ${name}` : 'Iniciar sesión o registrarse'}
-      title={name ? `Hola, ${name}` : 'Iniciar sesión o registrarse'}
-    >
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
-        <circle cx="12" cy="8" r="4" />
-        <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8" />
-      </svg>
-    </button>
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="inline-flex h-11 items-center gap-2 px-1"
+        aria-expanded={open}
+        aria-haspopup="menu"
+        aria-label={`Cuenta de ${user.nombre}`}
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8" />
+        </svg>
+        <span className="hidden text-sm font-medium text-dark sm:inline">{user.nombre}</span>
+      </button>
+      {open && (
+        <div
+          role="menu"
+          className="absolute right-0 top-full z-50 mt-2 w-48 overflow-hidden rounded-md border border-black/10 bg-surface shadow-card"
+        >
+          <Link
+            href="/cuenta"
+            role="menuitem"
+            onClick={() => setOpen(false)}
+            className="block px-4 py-3 text-sm text-dark hover:bg-surface-alt"
+          >
+            Mi perfil
+          </Link>
+          <Link
+            href="/cuenta/pedidos"
+            role="menuitem"
+            onClick={() => setOpen(false)}
+            className="block px-4 py-3 text-sm text-dark hover:bg-surface-alt"
+          >
+            Mis compras
+          </Link>
+          <Link
+            href="/cuenta/favoritos"
+            role="menuitem"
+            onClick={() => setOpen(false)}
+            className="block px-4 py-3 text-sm text-dark hover:bg-surface-alt"
+          >
+            Mis favoritos
+          </Link>
+          <button
+            type="button"
+            role="menuitem"
+            onClick={() => {
+              setOpen(false);
+              onLogout();
+            }}
+            className="block w-full px-4 py-3 text-left text-sm text-dark hover:bg-surface-alt"
+          >
+            Cerrar sesión
+          </button>
+        </div>
+      )}
+    </div>
   );
 }
