@@ -33,17 +33,8 @@ export default function GiftCardTile({ producto }: { producto: Producto }) {
       <div
         className={`group relative aspect-[16/10] w-full max-w-sm overflow-hidden rounded-xl bg-gradient-to-br ${gradiente} shadow-card transition-transform duration-300 hover:scale-105`}
       >
-        <span
-          className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-lg"
-          aria-hidden="true"
-          title="Tarjeta de regalo"
-        >
-          🎀
-        </span>
         <div className="flex h-full flex-col items-center justify-center gap-3 p-6 text-center">
-          <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-white/90 shadow">
-            <Image src="/images/logo-jeya.jpg" alt="Jeya Boutique" width={48} height={48} className="h-12 w-12 rounded-full object-cover" />
-          </div>
+          <Image src="/images/logo-jeya.jpg" alt="Jeya Boutique" width={56} height={56} className="h-14 w-14 rounded-full object-cover" />
           <p className="font-heading text-lg font-bold uppercase tracking-wide text-white drop-shadow">
             Tarjeta {variante.color}
           </p>
