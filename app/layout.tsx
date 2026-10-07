@@ -1,19 +1,18 @@
 import type { Metadata } from 'next';
-import { Cormorant, Montserrat } from 'next/font/google';
+import { Montserrat } from 'next/font/google';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import './globals.css';
 
-const cormorant = Cormorant({
-  subsets: ['latin'],
-  weight: ['500', '600', '700'],
-  variable: '--font-cormorant',
-  display: 'swap',
-});
-
+/**
+ * Proxima Nova es una fuente comercial (Adobe/Mark Simonson) sin licencia
+ * libre para Google Fonts/next-font. Montserrat es el sustituto gratuito
+ * más cercano en proporciones y peso visual, usada aquí tanto para
+ * títulos (semibold/bold) como para texto (regular) en toda la tienda.
+ */
 const montserrat = Montserrat({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
+  weight: ['300', '400', '500', '600', '700', '800'],
   variable: '--font-montserrat',
   display: 'swap',
 });
@@ -26,7 +25,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={`${cormorant.variable} ${montserrat.variable}`}>
+    <html lang="es" className={montserrat.variable}>
       <head>
         <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
         <meta name="referrer" content="strict-origin-when-cross-origin" />

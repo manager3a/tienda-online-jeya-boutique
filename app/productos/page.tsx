@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import type { Categoria } from '@/lib/data-source/types';
-import { getAllProducts } from '@/lib/data-source/client';
+import { getShopProducts } from '@/lib/data-source/client';
 import ProductFilters from '@/components/shop/ProductFilters';
 
 export const metadata: Metadata = {
@@ -13,12 +13,13 @@ const CATEGORIAS_VALIDAS: Categoria[] = ['blusas', 'chaquetas', 'zapatos', 'fald
 export default function CatalogoPage({
   searchParams,
 }: {
-  searchParams: { categoria?: string };
+  searchParams: { categoria?: string; buscar?: string };
 }) {
-  const productos = getAllProducts();
+  const productos = getShopProducts();
   const categoriaInicial = CATEGORIAS_VALIDAS.includes(searchParams.categoria as Categoria)
     ? (searchParams.categoria as Categoria)
     : 'todos';
+  const busquedaInicial = searchParams.buscar ?? '';
 
   return (
     <section className="py-14">
@@ -33,7 +34,11 @@ export default function CatalogoPage({
             colores disponibles.
           </p>
         </div>
-        <ProductFilters productos={productos} categoriaInicial={categoriaInicial} />
+        <ProductFilters
+          productos={productos}
+          categoriaInicial={categoriaInicial}
+          busquedaInicial={busquedaInicial}
+        />
       </div>
     </section>
   );

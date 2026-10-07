@@ -488,5 +488,44 @@
       }
     ],
     "badge": "Exclusiva"
+  },
+  {
+    "id": "g001",
+    "slug": "tarjeta-regalo-bronce",
+    "nombre": "Tarjeta de regalo Bronce",
+    "categoria": "tarjetas",
+    "precio": 50000,
+    "descripcion": "Tarjeta de regalo Jeya Boutique por $50.000, para que ella elija exactamente lo que más le guste. Se entrega por email, lista para usar en cualquier compra.",
+    "imagen": "/images/logo-jeya.jpg",
+    "imagenes": ["/images/logo-jeya.jpg"],
+    "variantes": [
+      { "talla": "Único", "color": "Bronce", "colorHex": "#9a6a3c", "stock": 999 }
+    ]
+  },
+  {
+    "id": "g002",
+    "slug": "tarjeta-regalo-plata",
+    "nombre": "Tarjeta de regalo Plata",
+    "categoria": "tarjetas",
+    "precio": 100000,
+    "descripcion": "Tarjeta de regalo Jeya Boutique por $100.000, para que ella elija exactamente lo que más le guste. Se entrega por email, lista para usar en cualquier compra.",
+    "imagen": "/images/logo-jeya.jpg",
+    "imagenes": ["/images/logo-jeya.jpg"],
+    "variantes": [
+      { "talla": "Único", "color": "Plata", "colorHex": "#b9bcbb", "stock": 999 }
+    ]
+  },
+  {
+    "id": "g003",
+    "slug": "tarjeta-regalo-dorada",
+    "nombre": "Tarjeta de regalo Dorada",
+    "categoria": "tarjetas",
+    "precio": 200000,
+    "descripcion": "Tarjeta de regalo Jeya Boutique por $200.000, para que ella elija exactamente lo que más le guste. Se entrega por email, lista para usar en cualquier compra.",
+    "imagen": "/images/logo-jeya.jpg",
+    "imagenes": ["/images/logo-jeya.jpg"],
+    "variantes": [
+      { "talla": "Único", "color": "Dorado", "colorHex": "#c9a24b", "stock": 999 }
+    ]
   }
 ]

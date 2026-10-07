@@ -1,7 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { getAllProducts } from '@/lib/data-source/client';
+import { getShopProducts } from '@/lib/data-source/client';
 import ProductGrid from '@/components/shop/ProductGrid';
+import WelcomePopup from '@/components/shop/WelcomePopup';
 
 const BENEFICIOS = [
   'Asesoramiento personalizado',
@@ -11,10 +12,11 @@ const BENEFICIOS = [
 ];
 
 export default function HomePage() {
-  const destacados = getAllProducts().slice(0, 4);
+  const destacados = getShopProducts().slice(0, 4);
 
   return (
     <>
+      <WelcomePopup />
       <section className="relative flex min-h-[560px] items-center overflow-hidden lg:min-h-[680px]">
         <Image
           src="/images/hero-mujeres.jpg"

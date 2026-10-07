@@ -9,7 +9,8 @@ html {
 h1,
 h2,
 h3 {
-  font-family: var(--font-cormorant), serif;
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 700;
 }
 
 @layer components {

@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import PaymentLogos from './PaymentLogos';
 
 export default function Footer() {
   return (
@@ -10,9 +11,9 @@ export default function Footer() {
             <Image
               src="/images/logo-jeya.jpg"
               alt="Jeya Boutique"
-              width={44}
-              height={44}
-              className="h-10 w-10 rounded-full object-cover"
+              width={48}
+              height={48}
+              className="h-11 w-11 rounded-full object-cover"
             />
           </Link>
           <p className="mt-4 max-w-[32ch] text-sm text-[#9ea3a1]">
@@ -85,13 +86,10 @@ export default function Footer() {
             </li>
             <li>Carrera 8H #164C-13, Bogotá</li>
           </ul>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {['Visa', 'Mastercard', 'PSE', 'Nequi', 'Mercado Pago'].map((m) => (
-              <span key={m} className="rounded border border-white/25 px-2 py-1 text-[0.7rem] text-[#cfd2d1]">
-                {m}
-              </span>
-            ))}
-          </div>
+          <p className="mb-2 mt-5 text-xs font-semibold uppercase tracking-wider text-white">
+            Medios de pago
+          </p>
+          <PaymentLogos />
         </div>
       </div>
 
