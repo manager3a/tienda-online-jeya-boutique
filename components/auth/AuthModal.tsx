@@ -8,6 +8,7 @@ interface FormState {
   nombre: string;
   apellido: string;
   email: string;
+  password: string;
   pais: string;
   telefono: string;
   dia: string;
@@ -19,6 +20,7 @@ const initialForm: FormState = {
   nombre: '',
   apellido: '',
   email: '',
+  password: '',
   pais: PAISES[0].code,
   telefono: '',
   dia: '',
@@ -26,12 +28,30 @@ const initialForm: FormState = {
   anio: '',
 };
 
+/** Traduce los mensajes más comunes de Supabase Auth; el resto se muestra tal cual. */
+function traducirError(mensaje: string): string {
+  const m = mensaje.toLowerCase();
+  if (m.includes('invalid login credentials')) return 'Correo o contraseña incorrectos.';
+  if (m.includes('email not confirmed')) return 'Confirma tu correo antes de iniciar sesión — revisa tu bandeja de entrada.';
+  if (m.includes('user already registered') || m.includes('already registered')) {
+    return 'Ya existe una cuenta registrada con ese correo.';
+  }
+  if (m.includes('password') && m.includes('6')) return 'La contraseña debe tener al menos 6 caracteres.';
+  if (m.includes('rate limit')) return 'Demasiados intentos. Intenta de nuevo en unos minutos.';
+  if (m.includes('failed to fetch') || m.includes('network')) {
+    return 'No pudimos conectar con el servidor. Revisa tu conexión e intenta de nuevo.';
+  }
+  return mensaje;
+}
+
 export default function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const { user, registerUser, loginByEmail, logoutUser } = useAuth();
+  const { user, registerUser, loginUser, logoutUser, configured } = useAuth();
   const [modo, setModo] = useState<'login' | 'registro'>('registro');
   const [form, setForm] = useState<FormState>(initialForm);
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
-  const [loginError, setLoginError] = useState('');
+  const [formError, setFormError] = useState('');
+  const [enviando, setEnviando] = useState(false);
+  const [confirmacionPendiente, setConfirmacionPendiente] = useState(false);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -53,6 +73,7 @@ export default function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClos
     if (!form.nombre.trim()) nextErrors.nombre = 'Ingresa tu nombre.';
     if (!form.apellido.trim()) nextErrors.apellido = 'Ingresa tu apellido.';
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) nextErrors.email = 'Email inválido.';
+    if (form.password.length < 6) nextErrors.password = 'Mínimo 6 caracteres.';
     if (!/^[0-9]{7,12}$/.test(form.telefono)) nextErrors.telefono = 'Celular inválido.';
     const dia = Number(form.dia);
     const mes = Number(form.mes);
@@ -64,38 +85,61 @@ export default function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClos
     return Object.keys(nextErrors).length === 0;
   }
 
-  function handleRegister(e: React.FormEvent) {
+  async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
+    setFormError('');
     if (!validate()) return;
     const pais = PAISES.find((p) => p.code === form.pais) ?? PAISES[0];
     const fechaNacimiento = `${form.anio}-${form.mes.padStart(2, '0')}-${form.dia.padStart(2, '0')}`;
-    registerUser({
+
+    setEnviando(true);
+    const result = await registerUser({
       nombre: form.nombre.trim(),
       apellido: form.apellido.trim(),
       email: form.email.trim(),
+      password: form.password,
       pais: pais.code,
       telefono: `${pais.dial} ${form.telefono.trim()}`,
       fechaNacimiento,
     });
+    setEnviando(false);
+
+    if (!result.ok) {
+      setFormError(traducirError(result.error));
+      return;
+    }
+    if (result.needsEmailConfirmation) {
+      setConfirmacionPendiente(true);
+      return;
+    }
     setForm(initialForm);
     onClose();
   }
 
-  function handleLogin(e: React.FormEvent) {
+  async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
-    const ok = loginByEmail(form.email);
-    if (!ok) {
-      setLoginError('No encontramos una cuenta con ese correo en este navegador. Regístrate primero.');
+    setFormError('');
+    setEnviando(true);
+    const result = await loginUser(form.email, form.password);
+    setEnviando(false);
+    if (!result.ok) {
+      setFormError(traducirError(result.error));
       return;
     }
-    setLoginError('');
     setForm(initialForm);
+    onClose();
+  }
+
+  function closeAndReset() {
+    setConfirmacionPendiente(false);
+    setFormError('');
+    setErrors({});
     onClose();
   }
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-dark/60" onClick={onClose} aria-hidden="true" />
+      <div className="absolute inset-0 bg-dark/60" onClick={closeAndReset} aria-hidden="true" />
       <div
         role="dialog"
         aria-modal="true"
@@ -104,29 +148,42 @@ export default function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClos
       >
         <button
           type="button"
-          onClick={onClose}
+          onClick={closeAndReset}
           aria-label="Cerrar"
           className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center text-2xl text-dark"
         >
           &times;
         </button>
 
-        {user ? (
+        {!configured ? (
+          <div className="text-center">
+            <p className="eyebrow">Cuentas de usuario</p>
+            <h2 className="mb-3 font-heading text-xl font-bold text-dark">Aún no disponible</h2>
+            <p className="text-sm text-neutral-600">
+              Falta configurar las variables de entorno de Supabase
+              (<code>NEXT_PUBLIC_SUPABASE_URL</code> y <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code>)
+              en este despliegue.
+            </p>
+          </div>
+        ) : user ? (
           <div className="text-center">
             <p className="eyebrow">Mi cuenta</p>
             <h2 className="mb-2 font-heading text-2xl font-bold text-dark">
-              Hola, {user.nombre} 👋
+              Hola, {user.nombre || user.email} 👋
             </h2>
             <p className="mb-6 text-sm text-neutral-600">{user.email}</p>
-            <button
-              type="button"
-              onClick={() => {
-                logoutUser();
-              }}
-              className="btn-outline w-full"
-            >
+            <button type="button" onClick={() => logoutUser()} className="btn-outline w-full">
               Cerrar sesión
             </button>
+          </div>
+        ) : confirmacionPendiente ? (
+          <div className="text-center">
+            <span className="mb-3 block text-3xl">📩</span>
+            <h2 className="mb-2 font-heading text-xl font-bold text-dark">Revisa tu correo</h2>
+            <p className="text-sm text-neutral-600">
+              Te enviamos un link de confirmación a <strong>{form.email}</strong>. Ábrelo para
+              activar tu cuenta y poder iniciar sesión.
+            </p>
           </div>
         ) : (
           <>
@@ -163,6 +220,16 @@ export default function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClos
                     value={form.email}
                     onChange={(e) => handleChange('email', e.target.value)}
                     autoComplete="email"
+                  />
+                </Field>
+
+                <Field label="Contraseña" error={errors.password}>
+                  <input
+                    type="password"
+                    className="input-field"
+                    value={form.password}
+                    onChange={(e) => handleChange('password', e.target.value)}
+                    autoComplete="new-password"
                   />
                 </Field>
 
@@ -223,8 +290,10 @@ export default function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClos
                   {errors.anio && <span className="mt-1 block text-xs text-red-600">{errors.anio}</span>}
                 </div>
 
-                <button type="submit" className="btn-primary w-full">
-                  Crear cuenta
+                {formError && <p className="text-sm text-red-600">{formError}</p>}
+
+                <button type="submit" disabled={enviando} className="btn-primary w-full">
+                  {enviando ? 'Creando cuenta…' : 'Crear cuenta'}
                 </button>
                 <p className="text-center text-xs text-neutral-500">
                   Al registrarte aceptas recibir novedades de Jeya Boutique. Consulta nuestra{' '}
@@ -246,9 +315,19 @@ export default function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClos
                     required
                   />
                 </Field>
-                {loginError && <p className="text-sm text-red-600">{loginError}</p>}
-                <button type="submit" className="btn-primary w-full">
-                  Entrar
+                <Field label="Contraseña">
+                  <input
+                    type="password"
+                    className="input-field"
+                    value={form.password}
+                    onChange={(e) => handleChange('password', e.target.value)}
+                    autoComplete="current-password"
+                    required
+                  />
+                </Field>
+                {formError && <p className="text-sm text-red-600">{formError}</p>}
+                <button type="submit" disabled={enviando} className="btn-primary w-full">
+                  {enviando ? 'Entrando…' : 'Entrar'}
                 </button>
               </form>
             )}
@@ -258,7 +337,7 @@ export default function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClos
               onClick={() => {
                 setModo(modo === 'registro' ? 'login' : 'registro');
                 setErrors({});
-                setLoginError('');
+                setFormError('');
               }}
               className="mt-4 w-full text-center text-sm text-accent-dark underline"
             >
